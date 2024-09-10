@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    environment {
+        NODE_ENV = 'development'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from Git repository
+                git 'https://github.com/your-repository/nodejs-app.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                // Install Node.js dependencies
+                sh 'npm install'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                // Run tests
+                sh 'npm test'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Build the application (if needed)
+                sh 'npm run build'
+            }
+        }
+        stage('Archive Artifacts') {
+            steps {
+                // Archive build artifacts (e.g., compiled files)
+                archiveArtifacts artifacts: '**/dist/**', allowEmptyArchive: true
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
